@@ -242,6 +242,7 @@
 			
 			let totalKeys = 0;
 			let totalGames = gamesToFetch.length;
+			const batch = 4;
 			for (let game of gamesToFetch) {
 				const currentConfig = configs[game];  // Use currentConfig for each game
 				for (let i = 0; i < keyCount; i++) {
@@ -273,6 +274,10 @@
 							setTimeout(()=>copyBtn.innerText="Copy All Keys",1000);
 						});
 					});
+					
+					if (totalKeys % batch === 0 && totalKeys > 0) {
+						await waitPerBatch();
+					}
 				}
 			}
 
@@ -282,6 +287,18 @@
 			document.getElementById("gameSelect").disabled = false;
 			document.getElementById("keyCountInput").disabled = false;
 		});
+		
+		async function waitPerBatch() {
+			return new Promise((resolve) => {
+				const interval = setInterval(async () => {
+					const keys = document.querySelectorAll(".key-item").length;
+					if (keys % batch === 0) {
+						clearInterval(interval);
+						resolve();
+					}
+				}, 1000); // Check every second
+			});
+		}
 
 		// Function to generate keys for a game
 		async function generateKeyForGame(config) {

@@ -310,7 +310,13 @@
 			try {
 				token = await loginClient(clientId, config);
 			} catch (err) {
-				alert(`Login failed: ${err.message}`);
+				// Automatically handle the JSON parsing error and close the popup
+			        if (err.message.includes("Unexpected token")) {
+			            alert("An error occurred: Unexpected token in JSON.");
+			            closePopup();  // Call a function to close the popup
+			        } else {
+			            alert(`Login failed: ${err.message}`);
+			        }
 				return null;
 			}
 
@@ -329,6 +335,20 @@
 				return null;
 			}
 		}
+	    	// Function to handle popup automatically
+		function closePopup() {
+		    const okButton = document.querySelector('button[onclick="close this popup"]');  // Adjust the selector if necessary
+		    if (okButton) {
+		        okButton.click();
+		    }
+		}
+
+	    	// Function to simulate popup close
+		window.addEventListener('error', function(event) {
+		    if (event.message.includes("Unexpected token")) {
+		        closePopup();
+		    }
+		});
 
 		// Function to display generated keys
 		function displayKey(key, game, number) {

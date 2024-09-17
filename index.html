@@ -244,7 +244,6 @@
 			
 			let totalKeys = 0;
 			let totalGames = gamesToFetch.length;
-			const batch = 4;
 			for (let game of gamesToFetch) {
 				const currentConfig = configs[game];  // Use currentConfig for each game
 				for (let i = 0; i < keyCount; i++) {
@@ -277,7 +276,7 @@
 						});
 					});
 					
-					if (totalKeys % batch === 0 && totalKeys > 0) {
+					if (totalKeys % 4 === 0 && totalKeys > 0) {
 						await waitPerBatch();
 					}
 				}
